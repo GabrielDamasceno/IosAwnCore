@@ -150,9 +150,10 @@ public class AwesomeNotifications:
             options: .customDismissAction
         )
 
-        UNUserNotificationCenter.current().getNotificationCategories(completionHandler: { results in
-            UNUserNotificationCenter.current().setNotificationCategories(results.union([categoryObject]))
-        })
+        // Through the same manager as the notification categories: a separate
+        // read-then-write here could race with them and drop their buttons.
+        // Asynchronous, so the plugin registration never waits on the system.
+        CategoryManager.shared.register(category: categoryObject, waitUntilDone: false)
 
         // Claim the notification-center delegate synchronously at registration.
         // Apple requires the delegate to be assigned BEFORE the app finishes

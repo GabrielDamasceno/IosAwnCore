@@ -168,9 +168,7 @@ public class NotificationBuilder {
         let trigger:UNNotificationTrigger? = nextDate == nil ? nil : notificationModel.schedule?.getUNNotificationTrigger()
         let request = UNNotificationRequest(identifier: notificationModel.content!.id!.description, content: content, trigger: trigger)
                 
-        var previousCategories:[UNNotificationCategory] = []
-        previousCategories.append(contentsOf: [category])
-        UNUserNotificationCenter.current().setNotificationCategories(Set(previousCategories))            
+        CategoryManager.shared.register(category: category)
         Logger.shared.d(TAG, "Notification Category Identifier: \(category.identifier)")
         
         if(notificationModel.schedule != nil){
